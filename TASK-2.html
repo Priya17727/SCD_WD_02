@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Glassmorphism Stopwatch</title>
+  <style>
+    body {
+      background: url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+
+    .container {
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    #display {
+      font-size: 3rem;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .buttons button {
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .buttons button:hover {
+      background: rgba(255, 255, 255, 0.6);
+      color: #000;
+    }
+
+    #laps {
+      margin-top: 20px;
+      list-style: none;
+      padding: 0;
+    }
+
+    #laps li {
+      background: rgba(255, 255, 255, 0.2);
+      margin: 5px auto;
+      padding: 8px;
+      border-radius: 10px;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Stopwatch</h1>
+    <div id="display">00:00:00</div>
+    <div class="buttons">
+      <button onclick="startStop()">Start</button>
+      <button onclick="pause()">Pause</button>
+      <button onclick="reset()">Reset</button>
+      <button onclick="lap()">Lap</button>
+    </div>
+    <ul id="laps"></ul>
+  </div>
+
+  <script>
+    let startTime, interval, elapsed = 0, running = false;
+
+    function updateDisplay() {
+      const time = Date.now() - startTime + elapsed;
+      const h = Math.floor(time / 3600000).toString().padStart(2, '0');
+      const m = Math.floor((time % 3600000) / 60000).toString().padStart(2, '0');
+      const s = Math.floor((time % 60000) / 1000).toString().padStart(2, '0');
+      document.getElementById("display").textContent = `${h}:${m}:${s}`;
+    }
+
+    function startStop() {
+      if (!running) {
+        startTime = Date.now();
+        interval = setInterval(updateDisplay, 1000);
+        running = true;
+      }
+    }
+
+    function pause() {
+      if (running) {
+        clearInterval(interval);
+        elapsed += Date.now() - startTime;
+        running = false;
+      }
+    }
+
+    function reset() {
+      clearInterval(interval);
+      elapsed = 0;
+      running = false;
+      document.getElementById("display").textContent = "00:00:00";
+      document.getElementById("laps").innerHTML = "";
+    }
+
+    function lap() {
+      if (running) {
+        const li = document.createElement("li");
+        li.textContent = "Lap: " + document.getElementById("display").textContent;
+        document.getElementById("laps").appendChild(li);
+      }
+    }
+  </script>
+</body>
+</html>
